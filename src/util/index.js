@@ -18,9 +18,9 @@
  * Gates Foundation
  * Name Surname <name.surname@gatesfoundation.com>
 
- * Georgi Georgiev <georgi.georgiev@modusbox.com>
- * Miguel de Barros <miguel.debarros@modusbox.com>
- * Rajiv Mothilal <rajiv.mothilal@modusbox.com>
+ - Georgi Georgiev <georgi.georgiev@modusbox.com>
+ - Miguel de Barros <miguel.debarros@modusbox.com>
+ - Rajiv Mothilal <rajiv.mothilal@modusbox.com>
  --------------
  ******/
 'use strict'
@@ -37,6 +37,9 @@ const StreamingProtocol = require('./streaming/protocol')
 const Time = require('./time')
 const Hash = require('./hash')
 const Comparators = require('./comparators/index')
+const Helpers = require('./helpers') // prevent circular module require
+const Settlement = require('./settlement')
+const EventFramework = require('./eventFramework')
 
 const omitNil = (object) => {
   return _.omitBy(object, _.isNil)
@@ -177,14 +180,6 @@ const breadcrumb = (location, message) => {
   return location.path
 }
 
-const transpose = (obj) => {
-  const transposed = new Map()
-  for (const prop in obj) {
-    transposed[obj[prop]] = prop
-  }
-  return transposed
-}
-
 const getCircularReplacer = () => {
   const seen = new WeakSet()
   return (key, value) => {
@@ -232,7 +227,7 @@ module.exports = {
   getValueByCaseInsensitiveKey,
   setValueByCaseInsensitiveKey,
   breadcrumb,
-  transpose,
+  transpose: Helpers.transpose,
   getCircularReplacer,
   filterExtensions,
   Kafka,
@@ -246,6 +241,6 @@ module.exports = {
   Time,
   Hash,
   Comparators,
-  EventFramework: require('./eventFramework'),
-  Settlement: require('./settlement')
+  EventFramework,
+  Settlement
 }
